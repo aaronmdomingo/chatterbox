@@ -20,7 +20,7 @@ const LandingPage = ({ history }) => {
                 </button>
                 <div className="absolute bottom-0 mb-2 h-8 w-full flex flex-col justify-center items-center">
                     <span className="text-xs">Don't want to register?</span>
-                    <span className="text-xs text-blue-500 cursor-pointer" onClick={() => history.push(`/dashboard/guest`)}>Login as guest</span>
+                    <span className="text-xs text-blue-500 cursor-pointer" onClick={() => history.push(`/dashboard/general/guest`)}>Login as guest</span>
                 </div>
             </div>
         </div>
