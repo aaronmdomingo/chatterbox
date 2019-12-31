@@ -4,15 +4,14 @@ import { withRouter } from 'react-router-dom';
 import Form from './sub-components/form';
 import Chat from './sub-components/chat';
 
-const Dashboard = props => {
-
+const Dashboard = ({ history }) => {
     const [ messageArr, setMessageArr ] = useState([]);
 
     return (
         <div className="min-h-screen bg-gray-300 bg-center flex flex-col justify-around items-center pt-2">
             <nav className="flex items-center justify-between w-11/12 mx-auto p-3 bg-white rounded-lg shadow-xl">
                 <div className="flex items-center flex-shrink-0 text-white mr-auto w-3/4 md:w-1/2 lg:w-1/4">
-                    <div className="w-1/4 h-16 logo bg-contain bg-no-repeat bg-center"></div>
+                    <div className="w-1/4 h-16 logo bg-contain bg-no-repeat bg-center" onClick={() => history.push('/')}></div>
                     <h4 className="ml-2 text-3xl text-left text-black leading-tight w-3/4">Chatter<span className="text-blue-500" >Box</span></h4>
                 </div>
                 <div className="block lg:hidden">
@@ -22,7 +21,7 @@ const Dashboard = props => {
                 </div>
             </nav>
             <Chat messageArr={messageArr}/>
-            <Form />
+            <Form/>
         </div>
     )
 }
