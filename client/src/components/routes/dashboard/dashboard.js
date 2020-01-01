@@ -1,11 +1,59 @@
-import React, { useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { withRouter, useParams } from 'react-router-dom';
+import io from 'socket.io-client';
 
 import Form from './sub-components/form';
 import Chat from './sub-components/chat';
 
+let socket;
+
 const Dashboard = ({ history }) => {
+    const [ message, setMessage ] = useState('');
     const [ messageArr, setMessageArr ] = useState([]);
+    const [ users, setUsers ] = useState([]);
+    const endpoint = 'http://localhost:4000/';
+    const { user, room } = useParams();
+
+    useEffect(() => {
+        socket = io(endpoint);
+        console.log(socket);
+
+        socket.emit('join', {user, room}, (err) => {
+            if (err) {
+                alert(err);
+            }
+        })
+
+        return () => {
+            socket.emit('disconnect');
+            socket.off();
+        }
+    }, [endpoint])
+
+    useEffect(() => {
+        socket.on('message', (message) => {
+          setMessageArr([...messageArr, message ]);
+        });
+    
+        socket.on('roomData', ({ users }) => {
+          setUsers(users);
+        })
+    
+        return () => {
+          socket.emit('disconnect');
+    
+          socket.off();
+        }
+      }, [messageArr])
+
+    const sendMessage = event => {
+        event.preventDefault();
+        if (message) {
+            socket.emit('sendMessage', message, () => {
+                setMessage('');
+            })
+        }
+    }
 
     return (
         <div className="min-h-screen bg-gray-300 bg-center flex flex-col justify-around items-center pt-2">
@@ -21,7 +69,7 @@ const Dashboard = ({ history }) => {
                 </div>
             </nav>
             <Chat messageArr={messageArr}/>
-            <Form/>
+            <Form message={message} setMessage={setMessage} sendMessage={sendMessage}/>
         </div>
     )
 }

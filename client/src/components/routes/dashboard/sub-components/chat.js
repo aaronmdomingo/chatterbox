@@ -13,7 +13,7 @@ const Chat = ({ messageArr }) => {
             </div>
             {
                 messageArr.map((e, index) => {
-                    return <Message key={index} />
+                    return <Message key={index} message={e}/>
                 })
             }
         </div>

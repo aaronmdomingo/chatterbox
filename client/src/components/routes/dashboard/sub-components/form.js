@@ -1,14 +1,11 @@
 
 import React from 'react';
-import { useParams } from 'react-router-dom';
 
-const Form = props => {
-    const user = useParams();
-
+const Form = ({ message, setMessage, sendMessage }) => {
     return (
-        <form className="flex justify-around items-center h-20 w-11/12 mx-auto mt-2 mb-2 p-2 bg-blue-500 rounded-lg shadow-xl">
+        <form className="flex justify-around items-center h-20 w-11/12 mx-auto mt-2 mb-2 p-2 bg-blue-500 rounded-lg shadow-xl" onSubmit={sendMessage}>
             <div className="w-3/5">
-                <input className="bg-white appearance-none border-2 border-white rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-200" name="message" type="text"/>
+                <input value={message} className="bg-white appearance-none border-2 border-white rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-200" name="message" type="text" onChange={event => setMessage(event.target.value)}/>
             </div>
             <button className="w-1/5 h-10 flex justify-center items-center bg-white border-2 border-white rounded-full focus:outline-none focus:border-blue-200" type="submit">
                 <svg className="fill-current h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
