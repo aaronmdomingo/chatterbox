@@ -10,7 +10,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-const { addUser, removeUser, getUser, getUsersInRoom } = require('./server/functions/socket');
+const { addUser, removeUser, getUser, getUsersInRoom } = require('./functions/functions');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -28,7 +28,7 @@ io.on('connection', socket => {
 
         socket.join(userObj.room);
 
-        socket.emit('message', { user: 'admin', text: `${userObj.username}, welcome to room ${userObj.room}.`});
+        socket.emit('message', { user: 'Admin', text: `${userObj.username}, welcome to room ${userObj.room}.`});
         socket.broadcast.to(userObj.room).emit('message', { user: 'Admin', text: `${userObj.username} has joined!` });
 
         io.to(userObj.room).emit('roomData', { room: userObj.room, users: getUsersInRoom(userObj.room) });
@@ -44,14 +44,14 @@ io.on('connection', socket => {
         callback();
       });
     
-      socket.on('disconnect', () => {
-        const user = removeUser(socket.id);
-    
-        if(user) {
-          io.to(user.room).emit('message', { user: 'Admin', text: `${user.username} has left.` });
-          io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
-        }
-      })
+    socket.on('disconnect', () => {
+      const user = removeUser(socket.id);
+  
+      if(user) {
+        io.to(user.room).emit('message', { user: 'Admin', text: `${user.username} has left.` });
+        io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
+      }
+    })
 });
 
 server.listen(PORT, () => {
