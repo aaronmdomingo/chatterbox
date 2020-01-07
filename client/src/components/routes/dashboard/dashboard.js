@@ -11,18 +11,20 @@ const Dashboard = ({ history }) => {
     const [ message, setMessage ] = useState('');
     const [ messageArr, setMessageArr ] = useState([]);
     const [ users, setUsers ] = useState([]);
+    const [ userCount, setUserCount ] = useState('');
     const endpoint = 'http://localhost:4000/';
     const { user, room } = useParams();
 
     useEffect(() => {
         socket = io(endpoint);
-        console.log(socket);
 
         socket.emit('join', {user, room}, (err) => {
             if (err) {
                 alert(err);
             }
         })
+
+        socket.emit('checkCount', {room});
 
         return () => {
             socket.emit('disconnect');
@@ -37,11 +39,11 @@ const Dashboard = ({ history }) => {
     
         socket.on('roomData', ({ users }) => {
           setUsers(users);
+          setUserCount(users.length);
         })
     
         return () => {
           socket.emit('disconnect');
-    
           socket.off();
         }
       }, [messageArr])
@@ -68,7 +70,7 @@ const Dashboard = ({ history }) => {
                     </button>
                 </div>
             </nav>
-            <Chat messageArr={messageArr}/>
+            <Chat messageArr={messageArr} userCount={userCount}/>
             <Form message={message} setMessage={setMessage} sendMessage={sendMessage}/>
         </div>
     )

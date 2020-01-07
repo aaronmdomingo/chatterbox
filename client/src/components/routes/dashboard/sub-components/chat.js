@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 
 import Message from './message';
 
-const Chat = ({ messageArr }) => {
+const Chat = ({ messageArr, userCount }) => {
     const { room } = useParams();
 
     return (
